@@ -1,26 +1,19 @@
 
 Vagrant.configure("2") do |config|
 
-  # common
-  config.vm.box = "ubuntu/bionic64"
-  config.vm.synced_folder "../shared_data", "/shared_data", disabled: true
-  config.vm.synced_folder "./", "/vagrant", disabled: true
-  config.vm.provider "virtualbox" do |vb|
-    vb.cpus = 1
-    vb.memory = 1024
-  end
-  config.vm.provision "shell", inline: "sudo apt-get update -y"
-
   # was1
   config.vm.define "was1" do |cfg|
+    cfg.vm.box = "ubuntu/bionic64"
     cfg.vm.provider "virtualbox" do |vb|
       vb.name = "was1"
     end
     cfg.vm.host_name = "was1"
-    cfg.vm.network "public_network", ip: "192.168.1.11"
-    cfg.vm.network "forwarded_port", guest: 22, host: 50022, auto_correct: true, id: "ssh"
-    cfg.vm.network "forwarded_port", guest: 80, host: 50080, auto_correct: true
-    cfg.vm.network "forwarded_port", guest: 8080, host: 58080, auto_correct: true
+    cfg.vm.network "public_network", ip: "192.168.1.12"
+    cfg.vm.network "forwarded_port", guest: 22, host: 50023, auto_correct: true, id: "ssh"
+    cfg.vm.network "forwarded_port", guest: 80, host: 50082, auto_correct: true
+    cfg.vm.network "forwarded_port", guest: 8080, host: 58082, auto_correct: true
+    cfg.vm.synced_folder "../shared_data", "/shared_data", disabled: true
+    cfg.vm.provision "shell", inline: "sudo apt-get update -y"
   end
 
 end

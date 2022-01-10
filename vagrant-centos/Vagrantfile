@@ -1,19 +1,9 @@
 
 Vagrant.configure("2") do |config|
 
-  # common
-  config.vm.box = "centos/7"
-  config.vm.synced_folder "../shared_data", "/shared_data", disabled: true
-  config.vm.synced_folder "./", "/vagrant", disabled: true
-  config.vm.provider "virtualbox" do |vb|
-    vb.cpus = 1
-    vb.memory = 1024
-  end
-  config.vm.provision "shell", inline: "sudo yum install -y net-tools"
-  config.vm.provision "shell", inline: "sudo yum install -y bind-utils"
-
   # was1
   config.vm.define "was1" do |cfg|
+    cfg.vm.box = "centos/7"
     cfg.vm.provider "virtualbox" do |vb|
       vb.name = "was1"
     end
@@ -22,6 +12,10 @@ Vagrant.configure("2") do |config|
     cfg.vm.network "forwarded_port", guest: 22, host: 50022, auto_correct: true, id: "ssh"
     cfg.vm.network "forwarded_port", guest: 80, host: 50080, auto_correct: true
     cfg.vm.network "forwarded_port", guest: 8080, host: 58080, auto_correct: true
+    cfg.vm.synced_folder "../shared_data", "/shared_data", disabled: true
+    cfg.vm.provision "shell", inline: "sudo yum update -y"
+    cfg.vm.provision "shell", inline: "sudo yum install -y net-tools"
+    cfg.vm.provision "shell", inline: "sudo yum install -y bind-utils"
   end
 
 end
