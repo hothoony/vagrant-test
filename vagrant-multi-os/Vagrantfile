@@ -1,0 +1,44 @@
+
+Vagrant.configure("2") do |config|
+
+  # common
+  # config.disksize.size = "30GB" # not working
+  config.vm.box = "centos/7"
+  config.vm.synced_folder "../shared_data", "/shared_data", disabled: true
+  config.vm.synced_folder "./", "/vagrant", disabled: true
+  config.vm.provider "virtualbox" do |vb|
+    vb.cpus = 1
+    vb.memory = 1024
+  end
+  config.vm.provision "shell", inline: "pwd"
+
+  # web1
+  config.vm.define "web1" do |cfg| # web1 : vagrant ssh 접속시 사용하는 이름
+    cfg.vm.box = "ubuntu/bionic64"
+    cfg.vm.provider "virtualbox" do |vb|
+      vb.name = "web1" # web1 : VirtualBox 에 보여지는 이름
+      vb.cpus = 2
+      vb.memory = 2048
+    end
+    cfg.vm.host_name = "web1" # web1 : 게스트OS 이름
+    cfg.vm.network "public_network", ip: "192.168.1.11"
+    cfg.vm.network "forwarded_port", guest: 22, host: 60001, auto_correct: true, id: "ssh"
+    cfg.vm.network "forwarded_port", guest: 80, host: 60081, auto_correct: true
+    cfg.vm.synced_folder "../shared_data", "/shared_data", disabled: true
+    # cfg.vm.provision "shell", inline: "sudo yum update -y"
+    # cfg.vm.provision "shell", inline: "sudo yum install -y net-tools" # ifconfig
+    # cfg.vm.provision "shell", inline: "sudo yum install -y bind-utils" # nslookup
+  end
+
+  # web2
+  config.vm.define "web2" do |cfg|
+    cfg.vm.provider "virtualbox" do |vb|
+      vb.name = "web2"
+    end
+    cfg.vm.host_name = "web2"
+    cfg.vm.network "public_network", ip: "192.168.1.12"
+    cfg.vm.network "forwarded_port", guest: 22, host: 60002, auto_correct: true, id: "ssh"
+    cfg.vm.network "forwarded_port", guest: 80, host: 60082, auto_correct: true
+  end
+
+end

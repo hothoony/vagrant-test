@@ -1,0 +1,67 @@
+
+Vagrant.configure("2") do |config|
+
+  $script = <<-SCRIPT
+    echo "alias ll='ls -alF'" >> ~/.bash_profile
+    source ~/.bash_profile
+  SCRIPT
+
+  # common
+  config.vm.box = "centos/7"
+  config.vm.synced_folder "../shared_data", "/shared_data", disabled: true
+  config.vm.synced_folder "./", "/vagrant", disabled: true
+  config.vm.provider "virtualbox" do |vb|
+    vb.cpus = 1
+    vb.memory = 1024
+  end
+  config.vm.provision "shell", inline: $script
+  config.vm.provision "shell", inline: "sudo yum install -y net-tools"
+  config.vm.provision "shell", inline: "sudo yum install -y bind-utils"
+
+  # # web1
+  # config.vm.define "web1" do |cfg|
+  #   cfg.vm.provider "virtualbox" do |vb|
+  #     vb.name = "web1"
+  #   end
+  #   cfg.vm.host_name = "web1"
+  #   cfg.vm.network "public_network", ip: "192.168.1.11"
+  #   cfg.vm.network "forwarded_port", guest: 22, host: 50001, auto_correct: true, id: "ssh"
+  #   cfg.vm.network "forwarded_port", guest: 80, host: 50081, auto_correct: true
+  # end
+
+  # was1
+  config.vm.define "was1" do |cfg|
+    cfg.vm.provider "virtualbox" do |vb|
+      vb.name = "was1"
+    end
+    cfg.vm.host_name = "was1"
+    cfg.vm.network "public_network", ip: "192.168.1.12"
+    cfg.vm.network "forwarded_port", guest: 22, host: 50002, auto_correct: true, id: "ssh"
+    cfg.vm.network "forwarded_port", guest: 8080, host: 58082, auto_correct: true
+  end
+
+  # # db1
+  # config.vm.define "db1" do |cfg|
+  #   cfg.vm.provider "virtualbox" do |vb|
+  #     vb.name = "db1"
+  #   end
+  #   cfg.vm.host_name = "db1"
+  #   cfg.vm.network "public_network", ip: "192.168.1.13"
+  #   cfg.vm.network "forwarded_port", guest: 22, host: 50003, auto_correct: true, id: "ssh"
+  #   cfg.vm.network "forwarded_port", guest: 3306, host: 53306, auto_correct: true
+  # end
+
+  # ansible-server
+  config.vm.define "ansible-server" do |cfg|
+    cfg.vm.provider "virtualbox" do |vb|
+      vb.name = "ansible-server"
+    end
+    cfg.vm.host_name = "ansible-server"
+    cfg.vm.network "public_network", ip: "192.168.1.19"
+    cfg.vm.network "forwarded_port", guest: 22, host: 50009, auto_correct: true, id: "ssh"
+    cfg.vm.provision "shell", inline: "sudo yum install -y epel-release"
+    cfg.vm.provision "shell", inline: "sudo yum install -y ansible"
+    cfg.vm.provision "shell", inline: "sudo yum install -y tree"
+  end
+
+end
