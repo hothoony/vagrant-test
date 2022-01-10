@@ -43,9 +43,11 @@
 
 - ### Vagrant 명령어
     ```bash
+    $ vagrant help
+
+    # 버전
     $ vagrant -v
     $ vagrant --version
-    $ vagrant help
 
     # vm 시작
     $ vagrant up

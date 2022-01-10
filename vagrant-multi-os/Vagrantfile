@@ -2,7 +2,6 @@
 Vagrant.configure("2") do |config|
 
   # common
-  # config.disksize.size = "30GB" # not working
   config.vm.box = "centos/7"
   config.vm.synced_folder "../shared_data", "/shared_data", disabled: true
   config.vm.synced_folder "./", "/vagrant", disabled: true
@@ -10,7 +9,6 @@ Vagrant.configure("2") do |config|
     vb.cpus = 1
     vb.memory = 1024
   end
-  config.vm.provision "shell", inline: "pwd"
 
   # web1
   config.vm.define "web1" do |cfg| # web1 : vagrant ssh 접속시 사용하는 이름
@@ -24,10 +22,7 @@ Vagrant.configure("2") do |config|
     cfg.vm.network "public_network", ip: "192.168.1.11"
     cfg.vm.network "forwarded_port", guest: 22, host: 60001, auto_correct: true, id: "ssh"
     cfg.vm.network "forwarded_port", guest: 80, host: 60081, auto_correct: true
-    cfg.vm.synced_folder "../shared_data", "/shared_data", disabled: true
-    # cfg.vm.provision "shell", inline: "sudo yum update -y"
-    # cfg.vm.provision "shell", inline: "sudo yum install -y net-tools" # ifconfig
-    # cfg.vm.provision "shell", inline: "sudo yum install -y bind-utils" # nslookup
+    cfg.vm.provision "shell", inline: "sudo apt-get update -y"
   end
 
   # web2
@@ -39,6 +34,9 @@ Vagrant.configure("2") do |config|
     cfg.vm.network "public_network", ip: "192.168.1.12"
     cfg.vm.network "forwarded_port", guest: 22, host: 60002, auto_correct: true, id: "ssh"
     cfg.vm.network "forwarded_port", guest: 80, host: 60082, auto_correct: true
+    cfg.vm.provision "shell", inline: "sudo yum update -y"
+    cfg.vm.provision "shell", inline: "sudo yum install -y net-tools" # ifconfig
+    cfg.vm.provision "shell", inline: "sudo yum install -y bind-utils" # nslookup
   end
 
 end
