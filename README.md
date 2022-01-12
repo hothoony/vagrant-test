@@ -7,8 +7,8 @@
 
 ## 개요
 - ### Vagrant
-    - 가상머신(VirtualBox)을 쉽고 효율적으로 관리하도록 해준다
-    - 프로비저닝 도구라고도 한다 (Provisioning)
+    - 가상머신(ex VirtualBox)을 프로비저닝 할 수 있게 해준다 (Provisioning)
+    - 설정파일: Vagrantfile
 - ### Ansible
     - yaml 파일로 인프라 구성을 자동화 한다
 
