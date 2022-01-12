@@ -81,7 +81,7 @@
     ```bash
     $ sudo yum update -y
     $ sudo yum install -y ansible
-    
+
     $ which ansible
     /usr/bin/ansible
 
@@ -170,3 +170,15 @@
         ```bash
         $ sudo ansible-playbook -i hosts tomcat-setup.yml
         ```
+    - ### ping check
+        ```bash
+        $ ansible all -m ping
+        192.168.1.12 | SUCCESS => {
+            "ansible_facts": {
+                "discovered_interpreter_python": "/usr/bin/python"
+            },
+            "changed": false,
+            "ping": "pong"
+        }
+        ```
+    
