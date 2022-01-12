@@ -53,6 +53,7 @@ Vagrant.configure("2") do |config|
 
   # ansible-server
   config.vm.define "ansible-server" do |cfg|
+    # cfg.vm.box = "ubuntu/bionic64"
     cfg.vm.provider "virtualbox" do |vb|
       vb.name = "ansible-server"
     end

@@ -94,7 +94,7 @@
       hosts (1):
         192.168.1.12
     ```
-- ### ssh-keygen
+- ### control node 에서 ssh 키 생성
     ```bash
     $ sudo ssh-keygen
 
@@ -102,9 +102,33 @@
     total 8
     -rw-------. 1 root root 1679 Jan 10 07:26 id_rsa
     -rw-r--r--. 1 root root  401 Jan 10 07:26 id_rsa.pub
-
-    $ sudo ssh-copy-id -i /root/.ssh/id_rsa.pub vagrant@192.168.1.12
     ````
+- ### ansible-client 에서
+    - #### ssh config 수정
+        ```bash
+        $ sudo vi /etc/ssh/sshd_config
+        PasswordAuthentication yes
+
+        $ sudo systemctl restart sshd
+        ```
+- ### ansible-server 에서 ansible-client 로 ssh 키 전송
+    ```bash
+    $ ssh-copy-id -i ~/.ssh/id_rsa.pub vagrant@192.168.1.12
+    /usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/vagrant/.ssh/id_rsa.pub"
+    /usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+    /usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+    vagrant@192.168.1.12's password:
+
+    Number of key(s) added: 1
+
+    Now try logging into the machine, with:   "ssh 'vagrant@192.168.1.12'"
+    and check to make sure that only the key(s) you wanted were added.
+    ```
+- ### ansible-client 에서 ssh 키 등록됐는지 확인
+    ```bash
+    $ cat ~/.ssh/authorized_keys
+    ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCZPF+rCyAs3UVnd2F7G0XT4w+m0sifYmCqs0ZcHTWb/6N/zsDpUUdMyNWmo0m9FwdPMioezRgOHmuL7Jp/FwfRQki1QMA/COBdvi9385ywqeN8lP7+WmZw0nLxHAj8rju8H9s+6uz7kJN+ItcuFNObO1/7RrItVBYD5MnU64Z0xxiOivcnMeltwW32XDi25zElG8bcsqfnWdpOhestDMT1ezu/ngowH+SoBucK8KQAz9yAhMxCMdDsM9+VcsncjPbsmth31Rv/icPWLCP2mtDYoI7IWHmuSzYw/m2Du/TlJdnzKcDumPPSJ4gej0i9ZLv+6rB+mwAgtBjQODGb504n vagrant@ansible-server
+    ```
 - ### ansible-playbook
     - ### config 파일 생성
         ```bash
