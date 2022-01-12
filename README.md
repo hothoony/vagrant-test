@@ -81,8 +81,17 @@
     ```bash
     $ sudo yum update -y
     $ sudo yum install -y ansible
+    
     $ which ansible
-    $ ansible --version
+    /usr/bin/ansible
+
+    $ $ ansible --version
+    ansible 2.9.25
+      config file = /etc/ansible/ansible.cfg
+      configured module search path = [u'/home/vagrant/.ansible/plugins/modules', u'/usr/share/ansible/plugins/modules']
+      ansible python module location = /usr/lib/python2.7/site-packages/ansible
+      executable location = /usr/bin/ansible
+      python version = 2.7.5 (default, Apr  2 2020, 13:16:51) [GCC 4.8.5 20150623 (Red Hat 4.8.5-39)]
     ```
 - ### ansible-server 에서 configuration 수정
     ```bash
