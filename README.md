@@ -77,14 +77,14 @@
 
 
 ## Ansible
-- ### control node 에 ansible 설치
+- ### ansible-server 에 ansible 설치
     ```bash
     $ sudo yum update -y
     $ sudo yum install -y ansible
     $ which ansible
     $ ansible --version
     ```
-- ### configuration 수정
+- ### ansible-server 에서 configuration 수정
     ```bash
     $ sudo vi /etc/ansible/hosts
     # Ex 1: Ungrouped hosts, specify before any group headers.
@@ -94,7 +94,7 @@
       hosts (1):
         192.168.1.12
     ```
-- ### control node 에서 ssh 키 생성
+- ### ansible-server 에서 ssh 키 생성
     ```bash
     $ sudo ssh-keygen
 
@@ -103,14 +103,13 @@
     -rw-------. 1 root root 1679 Jan 10 07:26 id_rsa
     -rw-r--r--. 1 root root  401 Jan 10 07:26 id_rsa.pub
     ````
-- ### ansible-client 에서
-    - #### ssh config 수정
-        ```bash
-        $ sudo vi /etc/ssh/sshd_config
-        PasswordAuthentication yes
+- ### ansible-client 에서 ssh config 수정
+    ```bash
+    $ sudo vi /etc/ssh/sshd_config
+    PasswordAuthentication yes
 
-        $ sudo systemctl restart sshd
-        ```
+    $ sudo systemctl restart sshd
+    ```
 - ### ansible-server 에서 ansible-client 로 ssh 키 전송
     ```bash
     $ ssh-copy-id -i ~/.ssh/id_rsa.pub vagrant@192.168.1.12
