@@ -1,15 +1,43 @@
 - name: install tomcat server
   hosts: all
   become: true
+  become_method: sudo
+  # remote_user: root
+  
+  vars:
+    tomcat_version: 9.0.56
+
   tasks:
   # - name: install OpenJDK
   #   yum: 
   #     name: java-11-openjdk-devel.x86_64
+
+  # - name: create dirs
+  #   shell: mkdir ~/program
+
+  # - name: copy files to remote
+  #   # become: yes
+  #   # tags: sync-push
+  #   synchronize:
+  #     src: "{{ item }}"
+  #     dest: "{{ item }}"
+  #     mode: push
+  #   # register: syncfile
+  #   with_items:
+  #   - "~/program/apache-tomcat-9.0.56.tar.gz"
+  #   - "~/program/OpenJDK11U-jdk_x64_linux_hotspot_11.0.13_8.tar.gz"
       
-  - name: download Tomcat
-    get_url:
-      url: "https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.56/bin/apache-tomcat-9.0.56.tar.gz"
-      dest: "/usr/local"
+  # - name: download Tomcat (get_url)
+  #   become: yes
+  #   get_url:
+  #     url: "https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.56/bin/apache-tomcat-9.0.56.tar.gz"
+  #     dest: "/usr/local"
+
+  - name: download Tomcat (wget)
+    become: yes
+    shell: wget -P program https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.56/bin/apache-tomcat-9.0.56.tar.gz --no-check-certificate
+    # args:
+    #   chdir: ~/temp
 
   # - name: extract Tomcat
   #   unarchive:
