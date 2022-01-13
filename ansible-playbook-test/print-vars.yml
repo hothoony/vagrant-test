@@ -1,0 +1,27 @@
+- name: playbook-test
+  hosts: all
+
+  vars:
+    tomcat_version: 9.0.56
+    apache_tomcat_tar: apache-tomcat-9.0.56.tar.gz
+
+  tasks:
+  - name: print vars 1
+    debug:
+      msg: "tomcat version = {{ tomcat_version }}"
+  - name: print vars 2
+    debug:
+      msg: "apache-tomcat version = {{ apache_tomcat_tar }}"
+  - name: print vars 3
+    debug:
+      msg: "apache-tomcat version = {{apache_tomcat_tar}}"
+  - name: print vars 123
+    debug:
+      msg: 
+        - "tomcat version = {{ tomcat_version }}"
+        - "apache-tomcat version = {{ apache_tomcat_tar }}"
+        - "apache-tomcat version = {{apache_tomcat_tar}}"
+  - name: echo vars 1
+    shell: echo {{ tomcat_version }}
+  - name: echo vars 2
+    shell: echo {{ apache_tomcat_tar }}

@@ -9,7 +9,7 @@ Vagrant.configure("2") do |config|
   # common
   config.vm.box = "centos/7"
   config.vm.synced_folder "../shared_data", "/shared_data", disabled: true
-  config.vm.synced_folder "./", "/vagrant", disabled: true
+  config.vm.synced_folder ".", "/vagrant", disabled: true
   config.vm.provider "virtualbox" do |vb|
     vb.cpus = 1
     vb.memory = 1024
@@ -17,6 +17,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: $script
   config.vm.provision "shell", inline: "sudo yum install -y net-tools"
   config.vm.provision "shell", inline: "sudo yum install -y bind-utils"
+  config.vm.provision "shell", inline: "sudo yum install -y wget"
 
   # # web1
   # config.vm.define "web1" do |cfg|
@@ -63,7 +64,6 @@ Vagrant.configure("2") do |config|
     cfg.vm.provision "shell", inline: "sudo yum install -y epel-release"
     cfg.vm.provision "shell", inline: "sudo yum install -y ansible"
     cfg.vm.provision "shell", inline: "sudo yum install -y tree"
-    cfg.vm.provision "shell", inline: "sudo yum install -y wget"
     # cfg.vm.provision "shell", inline: "sudo yum install -y python python-apt"
   end
 

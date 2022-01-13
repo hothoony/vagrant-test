@@ -1,0 +1,15 @@
+- name: playbook-test
+  hosts: all
+
+  tasks:
+  - name: copy files to remote
+    # become: yes
+    # tags: sync-push
+    synchronize:
+      src: "{{ item }}"
+      dest: "{{ item }}"
+      mode: push
+    # register: syncfile
+    with_items:
+    - "~/program/apache-tomcat-9.0.56.tar.gz"
+    - "~/program/OpenJDK11U-jdk_x64_linux_hotspot_11.0.13_8.tar.gz"
