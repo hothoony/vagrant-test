@@ -1,8 +1,8 @@
 ## Vagrant & Ansible 를 이용한 서버구성 자동화
 - ### 필요한 도구
-    - VirtualBox
     - Vagrant
     - Ansible
+    - VirtualBox
 
 
 ## 개요
@@ -96,46 +96,69 @@
 - ### ansible-server 에서 configuration 수정
     ```bash
     $ sudo vi /etc/ansible/hosts
-    # Ex 1: Ungrouped hosts, specify before any group headers.
-    192.168.1.12
+    # Ex 2: A collection of hosts belonging to the 'webservers' group
+    [was]
+    192.168.1.21
+    192.168.1.22
 
-    $ sudo ansible all -i hosts --list-hosts
-      hosts (1):
-        192.168.1.12
+    # ansible-client 에 ssh public key 등록한 후에 테스트
+    $ ansible all --list-hosts
+        hosts (2):
+          192.168.1.21
+          192.168.1.22
     ```
 - ### ansible-server 에서 ssh 키 생성
     ```bash
-    $ sudo ssh-keygen
+    $ ssh-keygen
 
-    $ sudo ls -l /root/.ssh
-    total 8
-    -rw-------. 1 root root 1679 Jan 10 07:26 id_rsa
-    -rw-r--r--. 1 root root  401 Jan 10 07:26 id_rsa.pub
+    $ ls -l ~/.ssh
+    -rw-------. 1 vagrant vagrant 1679 Jan 13 02:40 id_rsa
+    -rw-r--r--. 1 vagrant vagrant  404 Jan 13 02:40 id_rsa.pub
     ````
 - ### ansible-client 에서 ssh config 수정
     ```bash
-    $ sudo vi /etc/ssh/sshd_config
-    PasswordAuthentication yes
+    # PasswordAuthentication yes 로 수정
+    $ sudo sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
 
     $ sudo systemctl restart sshd
     ```
-- ### ansible-server 에서 ansible-client 로 ssh 키 전송
+- ### ansible-server 에서 ansible-client 로 ssh public 키 전송
     ```bash
-    $ ssh-copy-id -i ~/.ssh/id_rsa.pub vagrant@192.168.1.12
+    $ ssh-copy-id -i ~/.ssh/id_rsa.pub vagrant@192.168.1.21
     /usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/vagrant/.ssh/id_rsa.pub"
     /usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
     /usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
-    vagrant@192.168.1.12's password:
+    vagrant@192.168.1.21's password:
 
     Number of key(s) added: 1
 
-    Now try logging into the machine, with:   "ssh 'vagrant@192.168.1.12'"
+    Now try logging into the machine, with:   "ssh 'vagrant@192.168.1.21'"
+    and check to make sure that only the key(s) you wanted were added.
+    ```
+    ```bash
+    $ ssh-copy-id -i ~/.ssh/id_rsa.pub vagrant@192.168.1.22
+    /usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/vagrant/.ssh/id_rsa.pub"
+    The authenticity of host '192.168.1.22 (192.168.1.22)' can't be established.
+    ECDSA key fingerprint is SHA256:fl4vkIqXIHgp/QnjjH7rqX9sVFV8VpICv/SplpvhMAQ.
+    ECDSA key fingerprint is MD5:3f:cf:13:40:52:47:e4:25:2f:a7:12:c6:04:2b:bc:e1.
+    Are you sure you want to continue connecting (yes/no)? yes
+    /usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+    /usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+    vagrant@192.168.1.22's password:
+
+    Number of key(s) added: 1
+
+    Now try logging into the machine, with:   "ssh 'vagrant@192.168.1.22'"
     and check to make sure that only the key(s) you wanted were added.
     ```
 - ### ansible-client 에서 ssh 키 등록됐는지 확인
     ```bash
-    $ cat ~/.ssh/authorized_keys
-    ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCZPF+rCyAs3UVnd2F7G0XT4w+m0sifYmCqs0ZcHTWb/6N/zsDpUUdMyNWmo0m9FwdPMioezRgOHmuL7Jp/FwfRQki1QMA/COBdvi9385ywqeN8lP7+WmZw0nLxHAj8rju8H9s+6uz7kJN+ItcuFNObO1/7RrItVBYD5MnU64Z0xxiOivcnMeltwW32XDi25zElG8bcsqfnWdpOhestDMT1ezu/ngowH+SoBucK8KQAz9yAhMxCMdDsM9+VcsncjPbsmth31Rv/icPWLCP2mtDYoI7IWHmuSzYw/m2Du/TlJdnzKcDumPPSJ4gej0i9ZLv+6rB+mwAgtBjQODGb504n vagrant@ansible-server
+    $ ssh vagrant@192.168.1.21 'cat ~/.ssh/authorized_keys'
+    ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDFygdj25I7lsSw3giOsj1AjdFR3htdSB4Fd/4fz/+uSyp1dNBGnKtmcVfVrdv4LsZI1CDue0g7+OvECDmJhkUtkeVa/y1SfBDl4LlT9FDUHnXugXR0z4Yp2T6x2xcH3DUyBYn/IKfIwwgHTzeISFLbmWoXDtH+E92bIB2YBsRF+SiST+Ez4Hc0RV9cdKwDeagAz56bJ3UFdN+oLcZRuDvAbjg5Y+e9RECzptEIiZX86hdP0j1Puqp2Nl/QNAK6Jo9PUXQN+iJMQF5EgPkJbYmTBjPZj8oo8b4D4cKegoLT3tO11+LI95ijfussOJvbgaCZgdAtyrhJNgBxmg+1X/gN vagrant@ansible-server
+    ```
+    ```bash
+    $ ssh vagrant@192.168.1.22 'cat ~/.ssh/authorized_keys'
+    ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDFygdj25I7lsSw3giOsj1AjdFR3htdSB4Fd/4fz/+uSyp1dNBGnKtmcVfVrdv4LsZI1CDue0g7+OvECDmJhkUtkeVa/y1SfBDl4LlT9FDUHnXugXR0z4Yp2T6x2xcH3DUyBYn/IKfIwwgHTzeISFLbmWoXDtH+E92bIB2YBsRF+SiST+Ez4Hc0RV9cdKwDeagAz56bJ3UFdN+oLcZRuDvAbjg5Y+e9RECzptEIiZX86hdP0j1Puqp2Nl/QNAK6Jo9PUXQN+iJMQF5EgPkJbYmTBjPZj8oo8b4D4cKegoLT3tO11+LI95ijfussOJvbgaCZgdAtyrhJNgBxmg+1X/gN vagrant@ansible-server
     ```
 - ### ansible-playbook
     - ### config 파일 생성
@@ -170,10 +193,17 @@
         ```bash
         $ sudo ansible-playbook -i hosts tomcat-setup.yml
         ```
+    - ### list hosts
+        ```bash
+        $ ansible all --list-hosts
+          hosts (2):
+            192.168.1.21
+            192.168.1.22
+        ```
     - ### ping check
         ```bash
         $ ansible all -m ping
-        192.168.1.12 | SUCCESS => {
+        192.168.1.21 | SUCCESS => {
             "ansible_facts": {
                 "discovered_interpreter_python": "/usr/bin/python"
             },
