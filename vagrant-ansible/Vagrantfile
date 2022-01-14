@@ -2,19 +2,20 @@
 Vagrant.configure("2") do |config|
 
   $script = <<-SCRIPT
-    echo "alias ll='ls -alF'" >> ~/.bash_profile
-    source ~/.bash_profile
+    echo "alias ll='ls -alF'" >> .bash_profile
+    source .bash_profile
+
+    ln -s /shared_data shared_data
   SCRIPT
 
   # common
   config.vm.box = "centos/7"
-  config.vm.synced_folder "../shared_data", "/shared_data", disabled: true
-  config.vm.synced_folder ".", "/vagrant", disabled: true
   config.vm.provider "virtualbox" do |vb|
     vb.cpus = 1
     vb.memory = 1024
   end
-  # all
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.vm.synced_folder "./shared_data", "/shared_data"
   config.vm.provision "shell", inline: $script
   # config.vm.provision "shell", inline: "sudo yum update -y"
   # config.vm.provision "shell", inline: "sudo yum upgrade -y"
@@ -27,12 +28,6 @@ Vagrant.configure("2") do |config|
     sudo yum install -y zip
     sudo yum install -y unzip
   MYDELIMITER
-  config.vm.provision "shell", path: "shell/test.sh"
-  # ansible-client only
-  # config.vm.provision "shell", inline: <<-SCRIPT
-  #   sudo sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
-  #   sudo systemctl restart sshd
-  # SCRIPT
 
   # # web1
   # config.vm.define "web1" do |cfg|
@@ -54,6 +49,8 @@ Vagrant.configure("2") do |config|
     cfg.vm.network "public_network", ip: "192.168.1.21"
     cfg.vm.network "forwarded_port", guest: 22, host: 52122, auto_correct: true, id: "ssh"
     cfg.vm.network "forwarded_port", guest: 8080, host: 52188, auto_correct: true
+    cfg.vm.provision "shell", path: "shell/ansible-client_ssh-password-auth-yes.sh"
+    cfg.vm.provision "shell", path: "shell/ansible-client-only.sh"
   end
 
   # was2
@@ -65,6 +62,8 @@ Vagrant.configure("2") do |config|
     cfg.vm.network "public_network", ip: "192.168.1.22"
     cfg.vm.network "forwarded_port", guest: 22, host: 52222, auto_correct: true, id: "ssh"
     cfg.vm.network "forwarded_port", guest: 8080, host: 52288, auto_correct: true
+    cfg.vm.provision "shell", path: "shell/ansible-client_ssh-password-auth-yes.sh"
+    cfg.vm.provision "shell", path: "shell/ansible-client-only.sh"
   end
 
   # # db1
@@ -87,16 +86,13 @@ Vagrant.configure("2") do |config|
     cfg.vm.host_name = "ansible-server"
     cfg.vm.network "public_network", ip: "192.168.1.41"
     cfg.vm.network "forwarded_port", guest: 22, host: 54122, auto_correct: true, id: "ssh"
-    # cfg.vm.provision "shell", inline: "sudo yum install -y epel-release"
-    # cfg.vm.provision "shell", inline: "sudo yum install -y ansible"
-    # cfg.vm.provision "shell", inline: "sudo yum install -y tree"
-    # cfg.vm.provision "shell", inline: "sudo yum install -y python python-apt"
     cfg.vm.provision "shell", inline: <<-SCRIPT
       sudo yum install -y epel-release
       sudo yum install -y ansible
       sudo yum install -y tree
       # sudo yum install -y python python-apt
     SCRIPT
+    cfg.vm.provision "shell", path: "shell/ansible-server-only.sh"
   end
 
 end
