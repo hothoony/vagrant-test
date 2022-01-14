@@ -1,13 +1,14 @@
 
 Vagrant.configure("2") do |config|
 
-  # was2
-  config.vm.define "was2" do |cfg|
-    cfg.vm.box = "ubuntu/bionic64"
+  # ubuntu1
+  config.vm.define "ubuntu1" do |cfg|
+    # cfg.vm.box = "ubuntu/focal64"
+    cfg.vm.box = "hashicorp/bionic64"
     cfg.vm.provider "virtualbox" do |vb|
-      vb.name = "was2"
+      vb.name = "ubuntu1"
     end
-    cfg.vm.host_name = "was2"
+    cfg.vm.host_name = "ubuntu1"
     cfg.vm.network "public_network", ip: "192.168.1.12"
     cfg.vm.network "forwarded_port", guest: 22, host: 50023, auto_correct: true, id: "ssh"
     cfg.vm.network "forwarded_port", guest: 80, host: 50082, auto_correct: true
