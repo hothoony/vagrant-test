@@ -2,10 +2,10 @@
 Vagrant.configure("2") do |config|
 
   $script = <<-SCRIPT
-    echo "alias ll='ls -alF'" >> .bash_profile
-    source .bash_profile
+    echo "alias ll='ls -alF'" >> .bashrc
+    source .bashrc
 
-    ln -s /shared_data shared_data
+    # ln -s /shared_data shared_data
   SCRIPT
 
   # common
@@ -15,7 +15,7 @@ Vagrant.configure("2") do |config|
     vb.memory = 1024
   end
   config.vm.synced_folder ".", "/vagrant", disabled: true
-  config.vm.synced_folder "./shared_data", "/shared_data"
+  # config.vm.synced_folder "./shared_data", "/shared_data"
   config.vm.provision "shell", inline: $script
   # config.vm.provision "shell", inline: "sudo yum update -y"
   # config.vm.provision "shell", inline: "sudo yum upgrade -y"
