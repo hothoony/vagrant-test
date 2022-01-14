@@ -1,10 +1,6 @@
 - name: playbook-test
   hosts: all
 
-  vars:
-    tomcat_version: 9.0.56
-    apache_tomcat_tar: apache-tomcat-9.0.56.tar.gz
-
   tasks:
   - name: shell mkdir aa bb cc
     shell: |
