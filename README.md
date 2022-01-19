@@ -195,7 +195,7 @@
         ```
     - ### config 파일 실행
         ```bash
-        $ sudo ansible-playbook tomcat-setup.yml
+        $ ansible-playbook tomcat-setup.yml
         ```
     - ### list hosts
         ```bash
