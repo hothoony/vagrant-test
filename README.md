@@ -122,7 +122,7 @@
 
     $ sudo systemctl restart sshd
     ```
-- ### ansible-server 에서 ansible-client 로 ssh public 키 전송
+- ### ansible-server 에서 ansible-client 로 public 키 전송
     ```bash
     $ ssh-copy-id -i ~/.ssh/id_rsa.pub vagrant@192.168.1.21
     $ ssh-copy-id -i ~/.ssh/id_rsa.pub vagrant@192.168.1.22
@@ -164,49 +164,66 @@
     $ ssh vagrant@192.168.1.22 'cat ~/.ssh/authorized_keys'
     ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDFygdj25I7lsSw3giOsj1AjdFR3htdSB4Fd/4fz/+uSyp1dNBGnKtmcVfVrdv4LsZI1CDue0g7+OvECDmJhkUtkeVa/y1SfBDl4LlT9FDUHnXugXR0z4Yp2T6x2xcH3DUyBYn/IKfIwwgHTzeISFLbmWoXDtH+E92bIB2YBsRF+SiST+Ez4Hc0RV9cdKwDeagAz56bJ3UFdN+oLcZRuDvAbjg5Y+e9RECzptEIiZX86hdP0j1Puqp2Nl/QNAK6Jo9PUXQN+iJMQF5EgPkJbYmTBjPZj8oo8b4D4cKegoLT3tO11+LI95ijfussOJvbgaCZgdAtyrhJNgBxmg+1X/gN vagrant@ansible-server
     ```
-- ### ansible-playbook
-    - ### config 파일 생성
+- ### ansible-playbook (ansible-server 에서)
+    - ### playbook yaml 파일 생성
         ```bash
-        $ sudo vi /etc/ansible/tomcat-setup.yml
+        # ~/tomcat-setup.yml
+        $ vi tomcat-setup.yml
         ```
         ```yaml
         - name: install tomcat server
           hosts: all
           become: true
-
+          # become_method: sudo
+          # remote_user: root
+        
+          vars:
+            apache_tomcat_url: https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.56/bin/apache-tomcat-9.0.56.tar.gz
+            apache_tomcat_tar: apache-tomcat-9.0.56.tar.gz
+            apache_tomcat_dir: apache-tomcat-9.0.56
+        
           tasks:
           - name: install OpenJDK
-            apt: 
-              name: openjdk-11-jre-headless
-              
-          - name: download tomcat server packages
-            get_url:
-              url: https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.56/bin/apache-tomcat-9.0.56.tar.gz
-              dest: /usr/local
-
-          - name: extract tomcat packages
-            unarchive:
-              src: /usr/local/apache-tomcat-9.0.56.tar.gz
-              dest: /usr/local
-              remote_src: yes
-
-          - name: start tomcat server
-            shell: nohup /usr/local/apache-tomcat-9.0.56/bin/startup.sh
+            yum: 
+              name: java-11-openjdk-devel.x86_64
+        
+          - name: apache-tomcat - download
+            shell: |
+              rm -rf program
+              wget -P program {{ apache_tomcat_url }} --no-check-certificate
+          
+          - name: apache-tomcat - extract & create symbolic
+            shell: |
+              cd program
+              tar xvf {{ apache_tomcat_tar }}
+              ln -s {{ apache_tomcat_dir }} tomcat
+        
+          # - name: apache-tomcat - start
+          #   shell: |
+          #     /home/vagrant/program/tomcat/bin/startup.sh
         ```
-    - ### config 파일 실행
+    - ### yaml 파일 실행
         ```bash
+        # ~/tomcat-setup.yml
         $ ansible-playbook tomcat-setup.yml
         ```
-    - ### list hosts
+    - ### hosts 출력
         ```bash
         $ ansible all --list-hosts
           hosts (2):
             192.168.1.21
             192.168.1.22
         ```
-    - ### ping check
+    - ### ping 체크
         ```bash
         $ ansible all -m ping
+        192.168.1.22 | SUCCESS => {
+            "ansible_facts": {
+                "discovered_interpreter_python": "/usr/bin/python"
+            },
+            "changed": false,
+            "ping": "pong"
+        }
         192.168.1.21 | SUCCESS => {
             "ansible_facts": {
                 "discovered_interpreter_python": "/usr/bin/python"
@@ -215,4 +232,3 @@
             "ping": "pong"
         }
         ```
-    
