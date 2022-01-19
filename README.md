@@ -109,7 +109,7 @@
     ```
 - ### ansible-server 에서 ssh 키 생성
     ```bash
-    $ ssh-keygen
+    $ ssh-keygen -f ~/.ssh/id_rsa -P ''
 
     $ ls -l ~/.ssh
     -rw-------. 1 vagrant vagrant 1679 Jan 13 02:40 id_rsa
@@ -123,6 +123,10 @@
     $ sudo systemctl restart sshd
     ```
 - ### ansible-server 에서 ansible-client 로 ssh public 키 전송
+    ```bash
+    $ ssh-copy-id -i ~/.ssh/id_rsa.pub vagrant@192.168.1.21
+    $ ssh-copy-id -i ~/.ssh/id_rsa.pub vagrant@192.168.1.22
+    ```
     ```bash
     $ ssh-copy-id -i ~/.ssh/id_rsa.pub vagrant@192.168.1.21
     /usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/vagrant/.ssh/id_rsa.pub"
@@ -191,7 +195,7 @@
         ```
     - ### config 파일 실행
         ```bash
-        $ sudo ansible-playbook -i hosts tomcat-setup.yml
+        $ sudo ansible-playbook tomcat-setup.yml
         ```
     - ### list hosts
         ```bash

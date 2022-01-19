@@ -1,6 +1,6 @@
 - name: install tomcat server
   hosts: all
-  # become: true
+  become: true
   # become_method: sudo
   # remote_user: root
 
@@ -11,16 +11,20 @@
 
   tasks:
   - name: install OpenJDK
-    become: true
     yum: 
       name: java-11-openjdk-devel.x86_64
 
-  - name: apache-tomcat - download & extract & create symbolic
+  - name: apache-tomcat - download
     shell: |
-      wget -P ~/program {{ apache_tomcat_url }} --no-check-certificate
-      cd ~/program
+      rm -rf program
+      wget -P program {{ apache_tomcat_url }} --no-check-certificate
+  
+  - name: apache-tomcat - extract & create symbolic
+    shell: |
+      cd program
       tar xvf {{ apache_tomcat_tar }}
       ln -s {{ apache_tomcat_dir }} tomcat
 
-  - name: apache-tomcat - start
-    shell: ~/program/tomcat/bin/startup.sh
+  # - name: apache-tomcat - start
+  #   shell: |
+  #     /home/vagrant/program/tomcat/bin/startup.sh
