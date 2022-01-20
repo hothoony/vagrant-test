@@ -1,6 +1,8 @@
 - name: install tomcat server
   hosts: all
   become: true
+  become_method: su
+  become_user: vagrant
   # become_method: sudo
   # remote_user: root
 
