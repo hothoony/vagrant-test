@@ -1,8 +1,8 @@
 - name: install tomcat server
   hosts: all
   become: true
-  become_method: su
-  become_user: vagrant
+  # become_method: su
+  # become_user: vagrant
   # become_method: sudo
   # remote_user: root
 
@@ -16,17 +16,22 @@
     yum: 
       name: java-11-openjdk-devel.x86_64
 
-  - name: apache-tomcat - download
-    shell: |
-      rm -rf program
-      wget -P program {{ apache_tomcat_url }} --no-check-certificate
+  - name: tomcat - download
+    get_url: 
+      url: https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.56/bin/apache-tomcat-9.0.56.tar.gz
+      dest: /home/vagrant/program
   
-  - name: apache-tomcat - extract & create symbolic
+  - name: tomcat - extract
+    unarchive:
+      src: /home/vagrant/program/apache-tomcat-9.0.56.tar.gz
+      dest: /home/vagrant/program
+      remote_src: yes
+
+  - name: tomcat - create symbolic
     shell: |
       cd program
-      tar xvf {{ apache_tomcat_tar }}
       ln -s {{ apache_tomcat_dir }} tomcat
 
-  # - name: apache-tomcat - start
-  #   shell: |
-  #     /home/vagrant/program/tomcat/bin/startup.sh
+  - name: tomcat - start
+    shell: |
+      sudo nohup /home/vagrant/program/tomcat/bin/startup.sh

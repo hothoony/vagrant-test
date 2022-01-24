@@ -25,10 +25,10 @@ Vagrant.configure("2") do |config|
     sudo yum install -y bind-utils
     sudo yum install -y wget
   SHELL
-  config.vm.provision "shell", inline: <<-MYDELIMITER
-    sudo yum install -y zip
-    sudo yum install -y unzip
-  MYDELIMITER
+  # config.vm.provision "shell", inline: <<-MYDELIMITER
+  #   sudo yum install -y zip
+  #   sudo yum install -y unzip
+  # MYDELIMITER
 
   # # web1
   # config.vm.define "web1" do |cfg|
@@ -54,18 +54,18 @@ Vagrant.configure("2") do |config|
     cfg.vm.provision "shell", path: "shell/ansible-client-only.sh"
   end
 
-  # was2
-  config.vm.define "was2" do |cfg|
-    cfg.vm.provider "virtualbox" do |vb|
-      vb.name = "was2"
-    end
-    cfg.vm.host_name = "was2"
-    cfg.vm.network "public_network", ip: "192.168.1.22"
-    cfg.vm.network "forwarded_port", guest: 22, host: 52222, auto_correct: true, id: "ssh"
-    cfg.vm.network "forwarded_port", guest: 8080, host: 52288, auto_correct: true
-    cfg.vm.provision "shell", path: "shell/ansible-client_ssh-password-auth-yes.sh"
-    cfg.vm.provision "shell", path: "shell/ansible-client-only.sh"
-  end
+  # # was2
+  # config.vm.define "was2" do |cfg|
+  #   cfg.vm.provider "virtualbox" do |vb|
+  #     vb.name = "was2"
+  #   end
+  #   cfg.vm.host_name = "was2"
+  #   cfg.vm.network "public_network", ip: "192.168.1.22"
+  #   cfg.vm.network "forwarded_port", guest: 22, host: 52222, auto_correct: true, id: "ssh"
+  #   cfg.vm.network "forwarded_port", guest: 8080, host: 52288, auto_correct: true
+  #   cfg.vm.provision "shell", path: "shell/ansible-client_ssh-password-auth-yes.sh"
+  #   cfg.vm.provision "shell", path: "shell/ansible-client-only.sh"
+  # end
 
   # # db1
   # config.vm.define "db1" do |cfg|
@@ -80,7 +80,6 @@ Vagrant.configure("2") do |config|
 
   # ansible-server
   config.vm.define "ansible-server" do |cfg|
-    # cfg.vm.box = "ubuntu/bionic64"
     cfg.vm.provider "virtualbox" do |vb|
       vb.name = "ansible-server"
     end
@@ -91,7 +90,6 @@ Vagrant.configure("2") do |config|
       sudo yum install -y epel-release
       sudo yum install -y ansible
       sudo yum install -y tree
-      # sudo yum install -y python python-apt
     SCRIPT
     cfg.vm.provision "shell", path: "shell/ansible-server-only.sh"
   end
