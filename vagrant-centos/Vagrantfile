@@ -4,6 +4,7 @@ Vagrant.configure("2") do |config|
   # centos1
   config.vm.define "centos1" do |cfg|
     cfg.vm.box = "centos/7"
+    # cfg.vm.box = "centos/8" # error 발생함
     cfg.vm.provider "virtualbox" do |vb|
       vb.name = "centos1"
     end
