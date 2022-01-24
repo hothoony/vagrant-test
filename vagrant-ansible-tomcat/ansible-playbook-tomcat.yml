@@ -1,0 +1,25 @@
+---
+- name: install tomcat server
+  hosts: all
+  become: true
+
+  tasks:
+  - name: install java
+    yum: # ansible module
+      name: java
+      state: latest
+
+  - name: download tomcat
+    get_url: 
+      url: https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.56/bin/apache-tomcat-9.0.56.tar.gz
+      dest: /usr/local
+
+  - name: extract tomcat
+    unarchive:
+      src: /usr/local/apache-tomcat-9.0.56.tar.gz
+      dest: /usr/local
+      remote_src: yes
+
+  - name: start tomcat
+    shell: |
+      nohup /usr/local/apache-tomcat-9.0.56/bin/startup.sh

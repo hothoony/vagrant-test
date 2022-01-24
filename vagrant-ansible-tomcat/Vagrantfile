@@ -1,0 +1,50 @@
+
+Vagrant.configure("2") do |config|
+
+  $script = <<-SCRIPT
+    echo "alias ll='ls -lF'" >> .bashrc
+    echo "alias l='ls -alF'" >> .bashrc
+    source .bashrc
+  SCRIPT
+
+  # common
+  config.vm.box = "centos/7"
+  config.vm.provider "virtualbox" do |vb|
+    vb.cpus = 1
+    vb.memory = 512
+  end
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.vm.provision "shell", inline: $script
+  config.vm.provision "shell", inline: <<-SHELL
+    sudo yum install -y net-tools
+    sudo yum install -y bind-utils
+    sudo yum install -y wget
+  SHELL
+
+  # was1
+  config.vm.define "was1" do |cfg|
+    cfg.vm.provider "virtualbox" do |vb|
+      vb.name = "was1"
+    end
+    cfg.vm.host_name = "was1"
+    cfg.vm.network "public_network", ip: "192.168.1.21"
+    cfg.vm.network "forwarded_port", guest: 22, host: 52122, auto_correct: true, id: "ssh"
+    cfg.vm.network "forwarded_port", guest: 8080, host: 52188, auto_correct: true
+  end
+
+  # ansible-server
+  config.vm.define "ansible-server" do |cfg|
+    cfg.vm.provider "virtualbox" do |vb|
+      vb.name = "ansible-server"
+    end
+    cfg.vm.host_name = "ansible-server"
+    cfg.vm.network "public_network", ip: "192.168.1.41"
+    cfg.vm.network "forwarded_port", guest: 22, host: 54122, auto_correct: true, id: "ssh"
+    cfg.vm.provision "shell", inline: <<-SCRIPT
+      sudo yum install -y epel-release
+      sudo yum install -y ansible
+      sudo yum install -y tree
+    SCRIPT
+  end
+
+end
