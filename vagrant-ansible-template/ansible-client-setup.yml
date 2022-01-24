@@ -18,19 +18,19 @@
 
   - name: tomcat - download
     get_url: 
-      url: https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.56/bin/apache-tomcat-9.0.56.tar.gz
+      url: "{{ apache_tomcat_url }}"
       dest: /home/vagrant/program
   
   - name: tomcat - extract
     unarchive:
-      src: /home/vagrant/program/apache-tomcat-9.0.56.tar.gz
+      src: "/home/vagrant/program/{{ apache_tomcat_tar }}"
       dest: /home/vagrant/program
       remote_src: yes
 
   - name: tomcat - create symbolic
     shell: |
       cd program
-      ln -s {{ apache_tomcat_dir }} tomcat
+      ln -s "{{ apache_tomcat_dir }}" tomcat
 
   - name: tomcat - start
     shell: |
