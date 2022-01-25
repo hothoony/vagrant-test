@@ -1,0 +1,5 @@
+---
+# tasks file for web
+- name: create dir
+  shell: |
+    mkdir created_from_role_web
