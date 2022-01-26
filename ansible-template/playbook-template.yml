@@ -1,0 +1,25 @@
+---
+- hosts: all
+  become: yes
+  become_method: sudo
+
+  vars:
+    page_title: My Landing Page
+    page_description: this is my landing page descrption
+
+  tasks:
+    - name: install nginx
+      apt: 
+        name: nginx
+        state: latest
+    
+    - name: apply page template
+      template:
+        src: files/landing-page.html.j2
+        dest: /var/www/html/index.nginx-debian.html
+    
+    - name: allow all access to tcp port 80
+      ufw:
+        rule: allow
+        port: '80'
+        proto: tcp
