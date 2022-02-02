@@ -1,0 +1,10 @@
+
+Vagrant.configure("2") do |config|
+
+  config.vm.provider "docker" do |d|
+    d.image = "tomcat:9.0.58-jdk11"
+    d.ports = ["8088:8080"]
+    d.name = "tomcat-9-jdk11-test"
+  end
+
+end

@@ -1,0 +1,10 @@
+
+Vagrant.configure("2") do |config|
+
+  config.vm.provider "docker" do |d|
+    d.image = "httpd:2.4"
+    d.ports = ["8088:80"]
+    d.name = "httpd-web"
+  end
+
+end
