@@ -1,0 +1,7 @@
+Vagrant.configure("2") do |config|
+    config.vm.box = "centos/7"
+    config.vm.provider :libvirt do |libvirt|
+        libvirt.cpus = 1
+        libvirt.memory = 1024
+    end
+end
