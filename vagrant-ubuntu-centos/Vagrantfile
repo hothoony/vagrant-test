@@ -1,0 +1,37 @@
+Vagrant.configure("2") do |config|
+
+  # ubuntu1
+  config.vm.define "ubuntu1" do |cfg|
+    cfg.vm.box = "ubuntu/focal64"
+    # cfg.vm.box = "hashicorp/bionic64"
+    cfg.vm.provider "virtualbox" do |vb|
+      vb.name = "ubuntu1"
+    end
+    cfg.vm.host_name = "ubuntu1"
+    cfg.vm.network "public_network", ip: "192.168.1.111"
+    cfg.vm.network "forwarded_port", guest: 22, host: 51122, auto_correct: true, id: "ssh"
+    cfg.vm.network "forwarded_port", guest: 80, host: 51180, auto_correct: true
+    cfg.vm.network "forwarded_port", guest: 8080, host: 51188, auto_correct: true
+    # cfg.vm.synced_folder "../shared_data", "/shared_data", disabled: true
+    # cfg.vm.provision "shell", inline: "sudo apt-get update -y"
+  end
+
+  # centos1
+  config.vm.define "centos1" do |cfg|
+    cfg.vm.box = "centos/7"
+    # cfg.vm.box = "centos/8" # error 발생함
+    cfg.vm.provider "virtualbox" do |vb|
+      vb.name = "centos1"
+    end
+    cfg.vm.host_name = "centos1"
+    cfg.vm.network "public_network", ip: "192.168.1.112"
+    cfg.vm.network "forwarded_port", guest: 22, host: 51222, auto_correct: true, id: "ssh"
+    cfg.vm.network "forwarded_port", guest: 80, host: 51280, auto_correct: true
+    cfg.vm.network "forwarded_port", guest: 8080, host: 51288, auto_correct: true
+    # cfg.vm.synced_folder "../shared_data", "/shared_data", disabled: true
+    # cfg.vm.provision "shell", inline: "sudo yum update -y"
+    # cfg.vm.provision "shell", inline: "sudo yum install -y net-tools"
+    # cfg.vm.provision "shell", inline: "sudo yum install -y bind-utils"
+  end
+
+end
