@@ -6,4 +6,6 @@ RUN apt install -y dnsutils
 RUN apt install -y iputils-ping
 RUN apt install -y curl wget
 
+RUN mkdir this_linux_was_created_by_vagrant_up
+
 # CMD ["date"]
