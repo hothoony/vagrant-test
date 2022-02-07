@@ -1,11 +1,13 @@
 Vagrant.configure("2") do |config|
+
   config.vm.provider "docker" do |d|
     d.build_dir = "./ubuntu"
-    d.build_args = ["-t", "myubuntu:20.04"]
+    d.build_args = ["-t", "vagrant-ubuntu:20.04"]
     d.ports = ["2222:22"]
     # d.ports = ["8080:8080"]
-    d.name = "myubuntu2"
+    d.name = "va-ubuntu"
     # d.cmd = ["tail", "-f", "/dev/null"] ## run OK
     d.remains_running = true
   end
+
 end
