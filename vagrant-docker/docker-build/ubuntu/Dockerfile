@@ -4,7 +4,13 @@ RUN apt update -y
 RUN apt install -y net-tools
 RUN apt install -y dnsutils
 RUN apt install -y iputils-ping
-RUN apt install -y curl wget
+RUN apt install -y openssh-server
+RUN apt install -y systemd
+RUN apt install -y curl wget vim
+
+# vi /etc/ssh/sshd_config
+#PasswordAuthentication yes
+# RUN service ssh start
 
 RUN mkdir this_linux_was_created_by_vagrant_up
 
