@@ -8,4 +8,11 @@ RUN apt install -y curl wget
 
 RUN mkdir this_linux_was_created_by_vagrant_up
 
-# CMD ["date"]
+## run OK
+ENTRYPOINT ["tail", "-f", "/dev/null"]
+
+## run OK
+# ENTRYPOINT ["tail"]
+# CMD ["-f", "/dev/null"]
+
+EXPOSE 22/tcp
