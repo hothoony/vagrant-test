@@ -10,6 +10,8 @@ RUN apt install -y systemd
 # ssh server install
 RUN apt install -y openssh-server
 RUN sed -i'' -r 's/^#PermitRootLogin (\w|-)+/PermitRootLogin yes/g' /etc/ssh/sshd_config
+# RUN sed -i'' -r 's/^#PasswordAuthentication yes/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+# RUN sed -i'' -r 's/^#PermitEmptyPasswords no/PermitEmptyPasswords yes/g' /etc/ssh/sshd_config
 
 # chnage root password
 RUN echo root:root | chpasswd
