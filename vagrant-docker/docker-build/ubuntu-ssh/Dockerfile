@@ -22,7 +22,6 @@ RUN adduser vagrant
 RUN echo vagrant:vagrant | chpasswd
 
 # add sudoers user vagrant
-# edit sudoers
 # vi /etc/sudoers
 # vagrant ALL=(ALL:ALL) ALL
 
