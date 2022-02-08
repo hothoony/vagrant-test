@@ -6,6 +6,7 @@ RUN apt install -y dnsutils
 RUN apt install -y iputils-ping
 RUN apt install -y curl wget vim
 RUN apt install -y systemd
+RUN apt install -y sudo
 
 # ssh server install
 RUN apt install -y openssh-server
@@ -19,6 +20,11 @@ RUN echo root:root | chpasswd
 # create user vagrant
 RUN adduser vagrant
 RUN echo vagrant:vagrant | chpasswd
+
+# add sudoers user vagrant
+# edit sudoers
+# vi /etc/sudoers
+# vagrant ALL=(ALL:ALL) ALL
 
 RUN mkdir this_linux_was_created_by_VAGRANT_UP
 
