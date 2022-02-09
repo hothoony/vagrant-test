@@ -1,8 +1,11 @@
 FROM ubuntu:20.04
 
 RUN apt update -y
+# ifconfig
 RUN apt install -y net-tools
+# nslookup
 RUN apt install -y dnsutils
+# ping
 RUN apt install -y iputils-ping
 RUN apt install -y curl wget vim
 RUN apt install -y systemd
