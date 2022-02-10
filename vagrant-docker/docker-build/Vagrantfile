@@ -1,15 +1,15 @@
 Vagrant.configure("2") do |config|
 
-  # # ubuntu
-  # config.vm.provider "docker" do |d|
-  #   d.build_args = ["-t", "vagrant-ubuntu:20.04"]
-  #   d.build_dir = "./ubuntu-ssh"
-  #   d.ports = ["2222:22"]
-  #   # d.ports = ["8080:8080"]
-  #   d.name = "va-ubuntu"
-  #   # d.cmd = ["tail", "-f", "/dev/null"] ## run OK
-  #   d.remains_running = true
-  # end
+  # ubuntu
+  config.vm.provider "docker" do |d|
+    d.build_args = ["-t", "vagrant-ubuntu:20.04"]
+    d.build_dir = "./ubuntu-ssh"
+    d.ports = ["2122:22"]
+    # d.ports = ["8080:8080"]
+    d.name = "va-ubuntu"
+    # d.cmd = ["tail", "-f", "/dev/null"] ## run OK
+    d.remains_running = true
+  end
 
   # centos
   config.vm.provider "docker" do |d|
