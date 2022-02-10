@@ -1,29 +1,37 @@
 Vagrant.configure("2") do |config|
 
-  # ubuntu
-  config.vm.provider "docker" do |d|
-    d.build_args = ["-t", "vagrant-ubuntu:20.04"]
-    d.build_dir = "./ubuntu-ssh"
-    d.ports = ["2122:22"]
-    # d.ports = ["8080:8080"]
-    d.name = "va-ubuntu"
-    # d.cmd = ["tail", "-f", "/dev/null"] ## run OK
-    d.remains_running = true
+  # va-ubuntu1
+  config.vm.define "va-ubuntu1" do |cfg|
+    cfg.vm.host_name = "va-ubuntu1"
+    # ubuntu
+    cfg.vm.provider "docker" do |d|
+      d.build_args = ["-t", "vagrant-ubuntu:20.04"]
+      d.build_dir = "./ubuntu-ssh"
+      d.ports = ["2122:22"]
+      # d.ports = ["8080:8080"]
+      d.name = "va-ubuntu"
+      # d.cmd = ["tail", "-f", "/dev/null"] ## run OK
+      d.remains_running = true
+    end
   end
 
-  # centos
-  config.vm.provider "docker" do |d|
-    d.build_args = ["-t", "vagrant-centos:8"]
-    d.build_dir = "./centos-ssh"
-    d.ports = ["2222:22"]
-    # d.ports = ["8080:8080"]
-    # d.has_ssh = true
-    d.name = "va-centos"
-    # d.cmd = ["tail", "-f", "/dev/null"] ## run OK
-    d.create_args = ["--privileged"]
-    # d.cmd = ["/usr/sbin/init"]
-    d.remains_running = true
-    # d.vagrant_machine = "default"
+  # va-centos1
+  config.vm.define "va-centos1" do |cfg|
+    cfg.vm.host_name = "va-centos1"
+    # centos
+    cfg.vm.provider "docker" do |d|
+      d.build_args = ["-t", "vagrant-centos:8"]
+      d.build_dir = "./centos-ssh"
+      d.ports = ["2222:22"]
+      # d.ports = ["8080:8080"]
+      # d.has_ssh = true
+      d.name = "va-centos"
+      # d.cmd = ["tail", "-f", "/dev/null"] ## run OK
+      d.create_args = ["--privileged"]
+      # d.cmd = ["/usr/sbin/init"]
+      d.remains_running = true
+      # d.vagrant_machine = "default"
+    end
   end
 
 end
